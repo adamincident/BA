@@ -50,17 +50,10 @@ def format_alert(username, text):
 """
 
 
-def test_alert():
-    send_telegram("⚠️ JUST IN: Test alert working 🚀")
-
-
 def run():
     print("🚀 Block Alerts running...")
 
     while True:
-        # 🔥 TEST ALERT (temporary)
-        test_alert()
-
         for user in TWITTER_USERS:
             content = fetch_tweets(user)
 
@@ -77,7 +70,7 @@ def run():
                 send_telegram(msg)
                 print(f"[ALERT] {user}")
 
-        time.sleep(30)  # prevent spam
+        time.sleep(30)
 
 
 if __name__ == "__main__":
