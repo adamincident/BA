@@ -26,13 +26,21 @@ def send_telegram(text):
     })
 
 
+import snscrape.modules.twitter as sntwitter
+
 def fetch_tweets(username):
-    url = f"https://cdn.syndication.twimg.com/widgets/timelines/profile?screen_name={username}"
     try:
-        resp = requests.get(url, timeout=10)
-        data = resp.json()
-        return str(data)
-    except:
+        tweets = []
+
+        for i, tweet in enumerate(sntwitter.TwitterUserScraper(username).get_items()):
+            if i >= 1:  # only latest tweet
+                break
+            tweets.append(tweet.content)
+
+        return tweets[0] if tweets else ""
+
+    except Exception as e:
+        print(f"[SCRAPE ERROR] {username} {e}")
         return ""
 
 
