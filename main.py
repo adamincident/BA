@@ -1,14 +1,13 @@
 import requests
 import time
+from telethon import TelegramClient, events
+import asyncio
 
 BOT_TOKEN = "8580596413:AAFTTuDMNY1lhs1FFA4aoRTmXdV5C60l5A0"
 CHANNEL_ID = "@blockalerts"
 
-TWITTER_USERS = [
-    "zachxbt",
-    "certik",
-    "whale_alert"
-]
+api_id = 10709169
+api_hash = "a3909ade4b5edd72fc884710bb80af3c"
 
 KEYWORDS = [
     "hack", "exploit", "drained",
@@ -16,7 +15,33 @@ KEYWORDS = [
     "scam", "bounty", "launder"
 ]
 
-LAST_SEEN = {}
+
+CHANNELS_TO_TRACK = [
+    "zachxbt",
+    "certik_alerts",
+    "whale_alert_io"
+]
+
+
+client = TelegramClient("session", int(api_id), api_hash)
+
+
+@client.on(events.NewMessage(chats=CHANNELS_TO_TRACK))
+async def handler(event):
+    text = event.message.message
+
+    if not text:
+        return
+
+    if not is_relevant(text):
+        return
+
+    source = event.chat.username or "unknown"
+    msg = format_alert(source, text)
+
+    send_telegram(msg)
+    print(f"[ALERT] {event.chat.username}")
+
 
 def send_telegram(text):
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
@@ -24,24 +49,6 @@ def send_telegram(text):
         "chat_id": CHANNEL_ID,
         "text": text
     })
-
-
-import snscrape.modules.twitter as sntwitter
-
-def fetch_tweets(username):
-    try:
-        tweets = []
-
-        for i, tweet in enumerate(sntwitter.TwitterUserScraper(username).get_items()):
-            if i >= 1:  # only latest tweet
-                break
-            tweets.append(tweet.content)
-
-        return tweets[0] if tweets else ""
-
-    except Exception as e:
-        print(f"[SCRAPE ERROR] {username} {e}")
-        return ""
 
 
 def is_relevant(text):
@@ -67,26 +74,9 @@ def format_alert(user, content):
 
 
 def run():
-    print("🚀 Block Alerts running...")
-
-    while True:
-        for user in TWITTER_USERS:
-            content = fetch_tweets(user)
-
-            if not content:
-                continue
-
-            if LAST_SEEN.get(user) == content:
-                continue
-
-            LAST_SEEN[user] = content
-
-            if is_relevant(content):
-                msg = format_alert(user, content)
-                send_telegram(msg)
-                print(f"[ALERT] {user}")
-
-        time.sleep(30)
+    print("🚀 Block Alerts (Telegram Mode) running...")
+    client.start()
+    client.run_until_disconnected()
 
 
 if __name__ == "__main__":
