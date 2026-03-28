@@ -13,7 +13,7 @@ TWITTER_USERS = [
 KEYWORDS = [
     "hack", "exploit", "drained",
     "stolen", "freeze", "frozen",
-    "scam", "bounty", "launder"
+    "scam", "bounty", "launder", "the"
 ]
 
 LAST_SEEN = {}
