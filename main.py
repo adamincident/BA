@@ -49,13 +49,21 @@ def is_relevant(text):
     return any(word in text for word in KEYWORDS)
 
 
-def format_alert(username, text):
-    return f"""⚠️ JUST IN:
+def format_alert(user, content):
+    import re
 
-{text[:200]}...
+    # 🔥 extract money amount (if exists)
+    money_match = re.search(r"\$[\d,.]+[MK]?", content)
+    amount = money_match.group(0) if money_match else "Funds involved"
 
-@{username}
-"""
+    # 🔥 basic cleanup
+    clean = content.strip()
+
+    return (
+        f"⚠️ JUST IN: {amount} event detected\n\n"
+        f"{clean}\n\n"
+        f"Source: {user}"
+    )
 
 
 def run():
