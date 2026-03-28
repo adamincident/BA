@@ -12,7 +12,7 @@ TWITTER_USERS = [
 
 KEYWORDS = [
     "hack", "exploit", "drained",
-    "stolen", "freeze", "the",
+    "stolen", "freeze", "frozen",
     "scam", "bounty", "launder"
 ]
 
@@ -50,10 +50,17 @@ def format_alert(username, text):
 """
 
 
+def test_alert():
+    send_telegram("⚠️ JUST IN: Test alert working 🚀")
+
+
 def run():
     print("🚀 Block Alerts running...")
 
     while True:
+        # 🔥 TEST ALERT (temporary)
+        test_alert()
+
         for user in TWITTER_USERS:
             content = fetch_tweets(user)
 
@@ -70,7 +77,7 @@ def run():
                 send_telegram(msg)
                 print(f"[ALERT] {user}")
 
-        time.sleep(30)
+        time.sleep(30)  # prevent spam
 
 
 if __name__ == "__main__":
