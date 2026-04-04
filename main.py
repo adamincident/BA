@@ -131,7 +131,9 @@ def format_message(tweet):
     amount   = extract_amount(text)
     emoji    = source_emoji(username)
 
-    if amount:
+    if "update" in text.lower():
+        header = "🔄 UPDATE:"
+    elif amount:
         header = "⚠️ JUST IN: " + amount + " event detected"
     else:
         header = "⚠️ JUST IN: New Alert"
