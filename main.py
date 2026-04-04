@@ -26,10 +26,11 @@ ACCOUNTS = [
 ]
 
 NITTER_INSTANCES = [
-    "https://nitter.privacydev.net",
+    "https://xcancel.com",
+    "https://nitter.privacyredirect.com",
+    "https://nitter.tiekoetter.com",
+    "https://nitter.catsarch.com",
     "https://nitter.poast.org",
-    "https://nitter.cz",
-    "https://nitter.1d4.us",
 ]
 
 KEYWORDS = [
